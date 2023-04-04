@@ -12,8 +12,48 @@ module ConvertIndices
   end
 end
 
+module Path
+  def shortest_path(num_verts, graph, source, dest)
+    dist = Array.new(num_verts, -1)
+    prev = Array.new(num_verts)
+
+    dist[source] = 0
+    queue = [source]
+
+    until queue.empty?
+      u = queue.shift
+
+      moves[u].each do |elem| 
+        if dist[elem] == -1
+          queue << elem
+          dist[elem] = dist[u] + 1
+          prev[elem] = u
+
+          if elem == dest
+            return reconstruct_path(source, dest, prev)
+          end
+        end 
+      end 
+    end 
+    reconstruct_path(source, dest, prev)
+  end 
+
+  def reconstruct_path(source, dest, prev)
+    path = []
+    return path if prev[dest].nil? #destination is unreachable
+    until source == dest
+      path << dest
+      dest = prev[dest]
+    end
+    path << source 
+    path.reverse 
+  end
+
+end
+
 class Knight
   include ConvertIndices
+  include Path
 
   def initialize
     @moves = get_moves
@@ -22,20 +62,18 @@ class Knight
   attr_reader :moves 
 
   def knight_moves(source, dest)
-    s = convertToOneD(source[0], source[1], 8)
-    d = convertToTwoD(dest[0], source[1], 8)
-
-
+    
   end
 
   private 
 
-  def get_moves #NOT RIGHT
+  def get_moves 
     moves = Hash.new { |k, v| k[v] = Set.new }
     8.times do |x|
       7.times do |y|
         #check 6 possible "forward" moves from position x, y
         source = convertToOneD(x, y, 8)
+
         if (x + 1).between?(0, 7)
           if (y + 2).between?(0, 7)
             dest = convertToOneD(x + 1, y + 2, 8)
@@ -73,12 +111,18 @@ class Knight
           moves[source] << dest
           moves[dest] << source
         end
-      end #end y loop
-    end #end x loop
+      end 
+    end 
     moves
-  end #end def
+  end 
 end
 
 test = Knight.new
 
 pp test.moves
+
+test.knight_moves([0, 0], [2, 1])
+
+test.knight_moves([0, 0], [3, 3])
+
+test.knight_moves([0, 0], [7, 7])
