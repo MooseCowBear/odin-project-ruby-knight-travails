@@ -48,7 +48,7 @@ module Path
     path << source 
     path.reverse 
   end
-  
+
   def report_path(path)
     if path.length == 0
       puts "You didn't make it :("
@@ -72,7 +72,15 @@ class Knight
   attr_reader :moves 
 
   def knight_moves(source, dest)
-    
+    s = convertToOneD(source[0], source[1], 8)
+
+    d = convertToOneD(dest[0], dest[1], 8)
+
+    path = shortest_path(64, moves, s, d)
+
+    path = path.map { |elem| convertToTwoD(elem, 8) }
+
+    report_path(path)
   end
 
   private 
