@@ -48,7 +48,17 @@ module Path
     path << source 
     path.reverse 
   end
+  
+  def report_path(path)
+    if path.length == 0
+      puts "You didn't make it :("
+      return 
+    end
 
+    report = path.length - 1 == 1 ? "move" : "moves"
+    puts "You made it in #{path.length - 1} #{report}! Here is your path:" 
+    path.each { |elem| pp elem }
+  end
 end
 
 class Knight
