@@ -23,7 +23,7 @@ module Path
     until queue.empty?
       u = queue.shift
 
-      moves[u].each do |elem| 
+      graph[u].each do |elem| 
         if dist[elem] == -1
           queue << elem
           dist[elem] = dist[u] + 1
